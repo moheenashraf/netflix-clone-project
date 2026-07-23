@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{% if movie %}Edit Movie{% else %}Add Movie{% endif %}{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-6">
+    <div class="card bg-secondary bg-opacity-25 p-4">
+      <h3 class="mb-4">{% if movie %}Edit Movie{% else %}Add New Movie{% endif %}</h3>
+      <form method="post" action="{% if movie %}/admin/movies/edit/{{ movie.id }}{% else %}/admin/movies/add{% endif %}">
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" name="title" value="{{ movie.title if movie else '' }}" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" name="description" rows="3" required>{{ movie.description if movie else '' }}</textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Poster URL</label>
+          <input type="text" class="form-control" name="poster_url"
+                 value="{{ movie.poster_url if movie else '' }}"
+                 placeholder="https://... (leave blank for auto-generated placeholder)">
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Release Year</label>
+            <input type="number" class="form-control" name="release_year" min="1900" max="2100"
+                   value="{{ movie.release_year if movie else '' }}" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Genre</label>
+            <select class="form-select" name="genre_id" required>
+              {% for g in genres %}
+                <option value="{{ g.id }}" {% if movie and movie.genre_id == g.id %}selected{% endif %}>{{ g.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-danger flex-fill">{% if movie %}Save Changes{% else %}Add Movie{% endif %}</button>
+          <a href="/admin/movies" class="btn btn-outline-light flex-fill text-center">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

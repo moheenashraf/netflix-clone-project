@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2 class="mt-4" style="color: #ffffff;">Welcome, {{ profile.full_name }}</h2>
+<div class="app-card mt-3" style="max-width: 500px;">
+  <p><strong>Phone:</strong> {{ profile.phone_number }}</p>
+  <p><strong>Age:</strong> {{ profile.age }}</p>
+  <p><strong>Gender:</strong> {{ profile.gender }}</p>
+  <p><strong>Email:</strong> {{ profile.email }}</p>
+  <a href="/edit-profile" class="btn btn-outline-light mt-2">Edit Profile</a>
+</div>
+
+<div class="mt-4">
+  <a href="/browse" class="btn btn-danger btn-lg">Browse Movies</a>
+</div>
+{% endblock %}

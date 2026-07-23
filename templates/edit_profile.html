@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6">
+    <div class="app-card">
+      <h3 class="mb-4">Edit Your Profile</h3>
+      <form method="post" action="/edit-profile">
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" name="full_name" value="{{ profile.full_name }}" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Phone Number</label>
+          <input type="text" class="form-control" name="phone_number" value="{{ profile.phone_number }}" required>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Age</label>
+            <input type="number" class="form-control" name="age" min="13" max="120" value="{{ profile.age }}" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Gender</label>
+            <select class="form-select" name="gender" required>
+              <option value="Male" {% if profile.gender == "Male" %}selected{% endif %}>Male</option>
+              <option value="Female" {% if profile.gender == "Female" %}selected{% endif %}>Female</option>
+              <option value="Other" {% if profile.gender == "Other" %}selected{% endif %}>Other</option>
+              <option value="Prefer not to say" {% if profile.gender == "Prefer not to say" %}selected{% endif %}>Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" name="email" value="{{ profile.email }}" required>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-danger flex-fill">Save Changes</button>
+          <a href="/dashboard" class="btn btn-outline-light flex-fill text-center">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

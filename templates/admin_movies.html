@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Admin - Movies{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mt-3 mb-4">
+  <h2>Manage Movies</h2>
+  <a href="/admin/movies/add" class="btn btn-danger">+ Add Movie</a>
+</div>
+
+<table class="table table-dark table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Poster</th><th>Title</th><th>Genre</th><th>Year</th><th>Description</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in movies %}
+    <tr>
+      <td><img src="{{ m.poster_url }}" alt="{{ m.title }}" style="width:60px; border-radius:4px;"></td>
+      <td>{{ m.title }}</td>
+      <td>{{ m.genre_name }}</td>
+      <td>{{ m.release_year }}</td>
+      <td class="small" style="color: #b3b3b3;">{{ m.description[:80] }}{% if m.description|length > 80 %}...{% endif %}</td>
+      <td class="d-flex gap-1">
+        <a href="/admin/movies/edit/{{ m.id }}" class="btn btn-sm btn-outline-light">Edit</a>
+        <form method="post" action="/admin/movies/delete/{{ m.id }}"
+              onsubmit="return confirm('Delete this movie permanently?');">
+          <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

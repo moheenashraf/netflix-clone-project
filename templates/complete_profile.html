@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Complete Your Profile{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6">
+    <div class="app-card">
+      <h3 class="mb-2">Complete Your Profile</h3>
+      <p>Just a few more details before you can browse movies.</p>
+      <form method="post" action="/complete-profile">
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" name="full_name" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Phone Number</label>
+          <input type="text" class="form-control" name="phone_number" required>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Age</label>
+            <input type="number" class="form-control" name="age" min="13" max="120" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Gender</label>
+            <select class="form-select" name="gender" required>
+              <option value="">Select...</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" name="email" required>
+        </div>
+        <button type="submit" class="btn btn-danger w-100">Save & Continue</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

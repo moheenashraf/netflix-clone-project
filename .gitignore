@@ -1,0 +1,13 @@
+# Environment variables (contains real passwords - never upload this)
+.env
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# VS Code settings (optional, personal preference)
+.vscode/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
