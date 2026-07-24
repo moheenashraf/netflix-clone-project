@@ -13,9 +13,10 @@
         {% if session.get('user_id') %}
           <a class="nav-link text-white" href="/dashboard">Dashboard</a>
           <a class="nav-link text-white" href="/browse">Browse</a>
+          <a class="nav-link text-white" href="/logs">Logs</a>
           {% if session.get('role') == 'admin' %}
-            <a class="nav-link text-warning" href="/admin/users">Admin: Users</a>
             <a class="nav-link text-warning" href="/admin/movies">Admin: Movies</a>
+            <a class="nav-link text-warning" href="/admin/watch-history">Admin: Watch History</a>
           {% endif %}
           <a class="nav-link text-white" href="/logout">Logout</a>
         {% else %}

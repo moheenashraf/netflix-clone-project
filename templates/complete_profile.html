@@ -32,8 +32,14 @@
           </div>
         </div>
         <div class="mb-3">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-control" name="email" required>
+          <label class="form-label">Favorite Genre</label>
+          <select class="form-select" name="favorite_genre_id" required>
+            <option value="">Select...</option>
+            {% for g in genres %}
+              <option value="{{ g.id }}">{{ g.name }}</option>
+            {% endfor %}
+          </select>
+          <div class="form-text" style="color: #999;">Helps us suggest movies you'll actually like.</div>
         </div>
         <button type="submit" class="btn btn-danger w-100">Save & Continue</button>
       </form>

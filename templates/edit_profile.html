@@ -30,8 +30,12 @@
           </div>
         </div>
         <div class="mb-3">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-control" name="email" value="{{ profile.email }}" required>
+          <label class="form-label">Favorite Genre</label>
+          <select class="form-select" name="favorite_genre_id" required>
+            {% for g in genres %}
+              <option value="{{ g.id }}" {% if profile.favorite_genre_id == g.id %}selected{% endif %}>{{ g.name }}</option>
+            {% endfor %}
+          </select>
         </div>
         <div class="d-flex gap-2">
           <button type="submit" class="btn btn-danger flex-fill">Save Changes</button>

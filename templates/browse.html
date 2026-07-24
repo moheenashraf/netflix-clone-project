@@ -2,6 +2,7 @@
 {% block title %}Browse{% endblock %}
 {% block content %}
 <h2 class="mt-3 mb-4" style="color: #ffffff;">Browse Movies</h2>
+<p style="color: #999;">Click a poster to mark it as watched.</p>
 
 {% if not genres_with_movies %}
   <p style="color: #999;">No movies available yet. Check back soon!</p>
@@ -12,11 +13,12 @@
   <h4 class="mb-3" style="color: #ffffff;">{{ row.genre_name }}</h4>
   <div class="d-flex gap-3 overflow-auto pb-2">
     {% for movie in row.movies %}
-    <div class="movie-card" style="min-width: 180px; max-width: 180px;">
-      <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster">
+    <a href="/watch/{{ movie.id }}" class="text-decoration-none movie-card" style="min-width: 180px; max-width: 180px;">
+      <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster"
+           onerror="this.src='https://placehold.co/300x450/1a1a1a/ffffff?text=No+Image'">
       <p class="movie-title mb-0 mt-2">{{ movie.title }}</p>
       <p class="movie-year small">{{ movie.release_year }}</p>
-    </div>
+    </a>
     {% endfor %}
   </div>
 </div>

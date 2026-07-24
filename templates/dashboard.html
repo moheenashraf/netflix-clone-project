@@ -7,10 +7,45 @@
   <p><strong>Age:</strong> {{ profile.age }}</p>
   <p><strong>Gender:</strong> {{ profile.gender }}</p>
   <p><strong>Email:</strong> {{ profile.email }}</p>
+<p><strong>Favorite Genre:</strong> {{ profile.favorite_genre_name }}</p>
   <a href="/edit-profile" class="btn btn-outline-light mt-2">Edit Profile</a>
 </div>
 
-<div class="mt-4">
+<div class="mt-4 mb-5">
   <a href="/browse" class="btn btn-danger btn-lg">Browse Movies</a>
+</div>
+
+<div class="mb-5">
+  <h4 class="mb-3" style="color: #ffffff;">Recently Watched</h4>
+  {% if recently_watched %}
+  <div class="d-flex gap-3 overflow-auto pb-2">
+    {% for movie in recently_watched %}
+    <a href="/watch/{{ movie.id }}" class="text-decoration-none movie-card" style="min-width: 150px; max-width: 150px;">
+      <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster"
+           onerror="this.src='https://placehold.co/300x450/1a1a1a/ffffff?text=No+Image'">
+      <p class="movie-title mb-0 mt-2 small">{{ movie.title }}</p>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p style="color: #999;">You haven't watched anything yet — head to Browse to get started.</p>
+  {% endif %}
+</div>
+
+<div class="mb-4">
+  <h4 class="mb-3" style="color: #ffffff;">Suggested For You</h4>
+  {% if suggested %}
+  <div class="d-flex gap-3 overflow-auto pb-2">
+    {% for movie in suggested %}
+    <a href="/watch/{{ movie.id }}" class="text-decoration-none movie-card" style="min-width: 150px; max-width: 150px;">
+      <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster"
+           onerror="this.src='https://placehold.co/300x450/1a1a1a/ffffff?text=No+Image'">
+      <p class="movie-title mb-0 mt-2 small">{{ movie.title }}</p>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p style="color: #999;">No suggestions yet — watch a few movies first.</p>
+  {% endif %}
 </div>
 {% endblock %}
