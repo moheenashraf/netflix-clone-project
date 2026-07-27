@@ -4,20 +4,12 @@
 <div class="row justify-content-center mt-5">
   <div class="col-md-5">
     <div class="app-card">
-      <h3 class="mb-4">Create Your Account</h3>
+      <h3 class="mb-2">Create Your Account</h3>
+      <p style="color: #b3b3b3;">Enter your email — we'll send you a confirmation link to set your password.</p>
       <form method="post" action="/signup">
-        <div class="mb-3">
-          <label class="form-label">Name</label>
-          <input type="text" class="form-control" name="name" required>
-        </div>
         <div class="mb-3">
           <label class="form-label">Email</label>
           <input type="email" class="form-control" name="email" required>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Password</label>
-          <input type="password" class="form-control" name="password" minlength="6" required>
-          <div class="form-text" style="color: #999;">Minimum 6 characters.</div>
         </div>
         <button type="submit" class="btn btn-danger w-100">Sign Up</button>
       </form>

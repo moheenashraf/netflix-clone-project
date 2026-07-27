@@ -1,16 +1,16 @@
 from database import get_connection
 
 
-def create_profile(user_id, full_name, phone_number, age, gender, email, favorite_genre_id):
+def create_profile(user_id, full_name, phone_number, age, gender, email, favorite_genre_id, profile_photo_url=None):
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute(
         """
-        INSERT INTO profiles (user_id, full_name, phone_number, age, gender, email, favorite_genre_id)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO profiles (user_id, full_name, phone_number, age, gender, email, favorite_genre_id, profile_photo_url)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """,
-        (user_id, full_name, phone_number, age, gender, email, favorite_genre_id)
+        (user_id, full_name, phone_number, age, gender, email, favorite_genre_id, profile_photo_url)
     )
 
     cursor.execute(
@@ -40,18 +40,59 @@ def get_profile(user_id):
     return profile
 
 
-def update_profile(user_id, full_name, phone_number, age, gender, favorite_genre_id):
+def update_profile(user_id, full_name, phone_number, age, gender,
+                   favorite_genre_id, profile_photo_url=None):
+
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        """
-        UPDATE profiles
-        SET full_name = %s, phone_number = %s, age = %s, gender = %s, favorite_genre_id = %s
-        WHERE user_id = %s
-        """,
-        (full_name, phone_number, age, gender, favorite_genre_id, user_id)
-    )
+    if profile_photo_url:
+
+        cursor.execute(
+            """
+            UPDATE profiles
+            SET
+                full_name=%s,
+                phone_number=%s,
+                age=%s,
+                gender=%s,
+                favorite_genre_id=%s,
+                profile_photo_url=%s
+            WHERE user_id=%s
+            """,
+            (
+                full_name,
+                phone_number,
+                age,
+                gender,
+                favorite_genre_id,
+                profile_photo_url,
+                user_id
+            )
+        )
+
+    else:
+
+        cursor.execute(
+            """
+            UPDATE profiles
+            SET
+                full_name=%s,
+                phone_number=%s,
+                age=%s,
+                gender=%s,
+                favorite_genre_id=%s
+            WHERE user_id=%s
+            """,
+            (
+                full_name,
+                phone_number,
+                age,
+                gender,
+                favorite_genre_id,
+                user_id
+            )
+        )
 
     conn.commit()
     cursor.close()

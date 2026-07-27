@@ -75,12 +75,14 @@ def fetch_and_store():
 
             poster_url = f"{IMAGE_BASE}{poster_path}"
 
+            tmdb_id = movie.get("id")
+
             cursor.execute(
                 """
-                INSERT INTO movies (title, description, poster_url, release_year, genre_id)
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO movies (title, description, poster_url, release_year, genre_id, tmdb_id)
+                VALUES (%s, %s, %s, %s, %s, %s)
                 """,
-                (title, overview, poster_url, release_year, local_genre_id)
+                (title, overview, poster_url, release_year, local_genre_id, tmdb_id)
             )
             print(f"Added: {title} ({genre_name})")
             total_added += 1

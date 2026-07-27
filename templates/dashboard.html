@@ -1,51 +1,58 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-<h2 class="mt-4" style="color: #ffffff;">Welcome, {{ profile.full_name }}</h2>
-<div class="app-card mt-3" style="max-width: 500px;">
-  <p><strong>Phone:</strong> {{ profile.phone_number }}</p>
-  <p><strong>Age:</strong> {{ profile.age }}</p>
-  <p><strong>Gender:</strong> {{ profile.gender }}</p>
-  <p><strong>Email:</strong> {{ profile.email }}</p>
-<p><strong>Favorite Genre:</strong> {{ profile.favorite_genre_name }}</p>
-  <a href="/edit-profile" class="btn btn-outline-light mt-2">Edit Profile</a>
-</div>
-
-<div class="mt-4 mb-5">
-  <a href="/browse" class="btn btn-danger btn-lg">Browse Movies</a>
+<div class="dashboard-hero mb-5">
+  <h2 class="display-6 fw-bold mb-2 text-white">Welcome back, {{ profile.full_name }} 👋</h2>
+  <p class="text-white opacity-75 fs-5 mb-3">Discover recommendations tailored for you today.</p>
+  <div class="d-flex gap-3">
+    <a href="{{ url_for('browse') }}" class="btn btn-cinema-red"><i class="fa-solid fa-play me-2"></i> Start Watching</a>
+    <a href="{{ url_for('profile') }}" class="btn btn-glass"><i class="fa-solid fa-user me-2"></i> View Profile</a>
+  </div>
 </div>
 
 <div class="mb-5">
-  <h4 class="mb-3" style="color: #ffffff;">Recently Watched</h4>
+  <h4 class="section-title"><i class="fa-solid fa-clock-rotate-left text-danger me-1"></i> Recently Watched</h4>
   {% if recently_watched %}
-  <div class="d-flex gap-3 overflow-auto pb-2">
+  <div class="d-flex gap-4 overflow-auto pb-3">
     {% for movie in recently_watched %}
-    <a href="/watch/{{ movie.id }}" class="text-decoration-none movie-card" style="min-width: 150px; max-width: 150px;">
-      <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster"
+    <a href="/movie/{{ movie.id }}" class="text-decoration-none text-light movie-card" style="min-width: 160px; width: 160px;">
+      <img src="{% if movie.poster_url.startswith('http') or movie.poster_url.startswith('/') %}{{ movie.poster_url }}{% else %}/{{ movie.poster_url }}{% endif %}" 
+           alt="{{ movie.title }}" class="movie-poster"
            onerror="this.src='https://placehold.co/300x450/1a1a1a/ffffff?text=No+Image'">
-      <p class="movie-title mb-0 mt-2 small">{{ movie.title }}</p>
+      <div class="mt-2">
+        <p class="movie-title-text mb-0 text-truncate">{{ movie.title }}</p>
+        <span class="movie-year-badge">{{ movie.release_year }}</span>
+      </div>
     </a>
     {% endfor %}
   </div>
   {% else %}
-  <p style="color: #999;">You haven't watched anything yet — head to Browse to get started.</p>
+  <div class="glass-card text-center py-4">
+    <p class="text-white opacity-75 mb-0">You haven't watched anything yet. Head to Browse to discover movies!</p>
+  </div>
   {% endif %}
 </div>
 
 <div class="mb-4">
-  <h4 class="mb-3" style="color: #ffffff;">Suggested For You</h4>
+  <h4 class="section-title"><i class="fa-solid fa-sparkles text-warning me-1"></i> Suggested For You</h4>
   {% if suggested %}
-  <div class="d-flex gap-3 overflow-auto pb-2">
+  <div class="d-flex gap-4 overflow-auto pb-3">
     {% for movie in suggested %}
-    <a href="/watch/{{ movie.id }}" class="text-decoration-none movie-card" style="min-width: 150px; max-width: 150px;">
-      <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster"
+    <a href="/movie/{{ movie.id }}" class="text-decoration-none text-light movie-card" style="min-width: 160px; width: 160px;">
+      <img src="{% if movie.poster_url.startswith('http') or movie.poster_url.startswith('/') %}{{ movie.poster_url }}{% else %}/{{ movie.poster_url }}{% endif %}" 
+           alt="{{ movie.title }}" class="movie-poster"
            onerror="this.src='https://placehold.co/300x450/1a1a1a/ffffff?text=No+Image'">
-      <p class="movie-title mb-0 mt-2 small">{{ movie.title }}</p>
+      <div class="mt-2">
+        <p class="movie-title-text mb-0 text-truncate">{{ movie.title }}</p>
+        <span class="movie-year-badge">{{ movie.release_year }}</span>
+      </div>
     </a>
     {% endfor %}
   </div>
   {% else %}
-  <p style="color: #999;">No suggestions yet — watch a few movies first.</p>
+  <div class="glass-card text-center py-4">
+    <p class="text-white opacity-75 mb-0">No suggestions available yet. Watch a few movies first!</p>
+  </div>
   {% endif %}
 </div>
 {% endblock %}

@@ -2,24 +2,45 @@
 {% block title %}{% if movie %}Edit Movie{% else %}Add Movie{% endif %}{% endblock %}
 {% block content %}
 <div class="row justify-content-center mt-4">
-  <div class="col-md-6">
-    <div class="card bg-secondary bg-opacity-25 p-4">
+  <div class="col-md-7">
+    <div class="app-card">
       <h3 class="mb-4">{% if movie %}Edit Movie{% else %}Add New Movie{% endif %}</h3>
-      <form method="post" action="{% if movie %}/admin/movies/edit/{{ movie.id }}{% else %}/admin/movies/add{% endif %}">
+      <form method="post"
+            action="{% if movie %}/admin/movies/edit/{{ movie.id }}{% else %}/admin/movies/add{% endif %}"
+            enctype="multipart/form-data">
+
         <div class="mb-3">
           <label class="form-label">Title</label>
           <input type="text" class="form-control" name="title" value="{{ movie.title if movie else '' }}" required>
         </div>
+
         <div class="mb-3">
           <label class="form-label">Description</label>
           <textarea class="form-control" name="description" rows="3" required>{{ movie.description if movie else '' }}</textarea>
         </div>
+
         <div class="mb-3">
-          <label class="form-label">Poster URL</label>
-          <input type="text" class="form-control" name="poster_url"
-                 value="{{ movie.poster_url if movie else '' }}"
-                 placeholder="https://... (leave blank for auto-generated placeholder)">
+          <label class="form-label">Poster</label>
+          <div class="d-flex align-items-start gap-3 mb-2">
+            <img id="posterPreview"
+                 src="{{ movie.poster_url if movie else 'https://placehold.co/150x225/1a1a1a/ffffff?text=No+Poster' }}"
+                 alt="Poster preview" style="width: 120px; height: 180px; object-fit: cover; border-radius: 6px; border: 1px solid #444;">
+
+            <div class="flex-fill">
+              <label for="posterFileInput" class="btn btn-outline-light mb-2">Change Image</label>
+              <!-- Updated accept attribute to allow all common image formats including .jfif, .avif, .gif, .bmp, .svg -->
+              <input type="file" id="posterFileInput" name="poster_file" accept="image/*,.png,.jpg,.jpeg,.webp,.jfif,.avif,.gif,.bmp,.svg" style="display: none;">
+              <div class="form-text" style="color: #999;">PNG, JPG, JPEG, WEBP, JFIF, AVIF, GIF, BMP, or SVG. Max 5MB.</div>
+
+              <div class="mt-2">
+                <label class="form-label small" style="color: #b3b3b3;">Or paste an image URL instead</label>
+                <input type="text" class="form-control" name="poster_url" value="{{ movie.poster_url if movie else '' }}"
+                       placeholder="https://... (ignored if you upload a file above)">
+              </div>
+            </div>
+          </div>
         </div>
+
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label">Release Year</label>
@@ -35,6 +56,7 @@
             </select>
           </div>
         </div>
+
         <div class="d-flex gap-2">
           <button type="submit" class="btn btn-danger flex-fill">{% if movie %}Save Changes{% else %}Add Movie{% endif %}</button>
           <a href="/admin/movies" class="btn btn-outline-light flex-fill text-center">Cancel</a>
@@ -43,4 +65,90 @@
     </div>
   </div>
 </div>
+
+<!-- Confirmation popup: shows old vs new poster before the change is applied -->
+<div class="modal fade" id="posterConfirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-light border border-secondary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Confirm Poster Change</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" id="posterModalCloseBtn"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-around align-items-center text-center">
+          <div>
+            <p class="mb-2" style="color: #999;">Current</p>
+            <img id="modalOldImage" src="" alt="Current poster"
+                 style="width: 130px; height: 195px; object-fit: cover; border-radius: 6px; border: 1px solid #444;">
+          </div>
+          <div style="font-size: 1.8rem; color: #7dd3fc;">&#8594;</div>
+          <div>
+            <p class="mb-2" style="color: #999;">New</p>
+            <img id="modalNewImage" src="" alt="New poster"
+                 style="width: 130px; height: 195px; object-fit: cover; border-radius: 6px; border: 1px solid #7dd3fc;">
+          </div>
+        </div>
+        <p class="text-center mt-3 mb-0" style="color: #b3b3b3;" id="modalFileName"></p>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-light" id="posterCancelBtn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="posterConfirmBtn">Use This Image</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const posterFileInput = document.getElementById('posterFileInput');
+  const posterPreview = document.getElementById('posterPreview');
+  const modalOldImage = document.getElementById('modalOldImage');
+  const modalNewImage = document.getElementById('modalNewImage');
+  const modalFileName = document.getElementById('modalFileName');
+  const posterConfirmModalEl = document.getElementById('posterConfirmModal');
+  const posterConfirmModal = new bootstrap.Modal(posterConfirmModalEl);
+
+  let pendingDataUrl = null;
+  let isConfirmed = false;
+
+  posterFileInput.addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    isConfirmed = false;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      pendingDataUrl = e.target.result;
+      modalOldImage.src = posterPreview.src;
+      modalNewImage.src = pendingDataUrl;
+      modalFileName.textContent = file.name;
+      posterConfirmModal.show();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('posterConfirmBtn').addEventListener('click', function () {
+    isConfirmed = true;
+    posterPreview.src = pendingDataUrl;
+    posterConfirmModal.hide();
+  });
+
+  function cancelPosterChange() {
+    posterFileInput.value = '';
+    pendingDataUrl = null;
+    isConfirmed = false;
+    posterConfirmModal.hide();
+  }
+
+  document.getElementById('posterCancelBtn').addEventListener('click', cancelPosterChange);
+  document.getElementById('posterModalCloseBtn').addEventListener('click', cancelPosterChange);
+
+  // If user closes modal by clicking backdrop or pressing ESC without confirming, clear file input
+  posterConfirmModalEl.addEventListener('hidden.bs.modal', function () {
+    if (!isConfirmed) {
+      posterFileInput.value = '';
+      pendingDataUrl = null;
+    }
+  });
+</script>
 {% endblock %}

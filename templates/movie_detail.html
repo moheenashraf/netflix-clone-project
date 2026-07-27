@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ movie.title }}{% endblock %}
+{% block content %}
+<div class="glass-card p-4 p-md-5">
+  <div class="row g-4 align-items-center">
+    <div class="col-md-4 text-center">
+      <img src="{% if movie.poster_url.startswith('http') or movie.poster_url.startswith('/') %}{{ movie.poster_url }}{% else %}/{{ movie.poster_url }}{% endif %}" 
+           alt="{{ movie.title }}" class="img-fluid rounded-3 shadow-lg border border-secondary"
+           style="max-height: 480px; object-fit: cover;"
+           onerror="this.src='https://placehold.co/300x450/1a1a1a/ffffff?text=No+Image'">
+    </div>
+    <div class="col-md-8">
+      <div class="d-flex align-items-center gap-3 mb-2">
+        <span class="badge bg-danger fs-6">{{ movie.genre_name or 'Movie' }}</span>
+        <span class="text-muted fs-5"><i class="fa-solid fa-calendar me-1"></i> {{ movie.release_year }}</span>
+      </div>
+      <h1 class="display-5 fw-bold mb-3">{{ movie.title }}</h1>
+      <p class="text-muted fs-5 leading-relaxed mb-4">{{ movie.description }}</p>
+
+      <div class="d-flex gap-3 mb-4">
+        <a href="/watch/{{ movie.id }}" class="btn btn-cinema-red btn-lg"><i class="fa-solid fa-circle-play me-2"></i> Mark as Watched</a>
+        <a href="{{ url_for('browse') }}" class="btn btn-glass btn-lg"><i class="fa-solid fa-arrow-left me-2"></i> Back to Browse</a>
+      </div>
+
+      {% if trailer_key %}
+      <div class="mt-4 pt-3 border-top border-secondary">
+        <h4 class="fw-bold mb-3"><i class="fa-brands fa-youtube text-danger me-2"></i> Official Trailer</h4>
+        <div class="ratio ratio-16x9 rounded-3 overflow-hidden border border-secondary shadow-lg">
+          <iframe src="https://www.youtube.com/embed/{{ trailer_key }}"
+                  title="{{ movie.title }} Trailer" allowfullscreen></iframe>
+        </div>
+      </div>
+      {% else %}
+      <p class="text-muted mt-3"><i class="fa-solid fa-video-slash me-1"></i> No trailer available for this movie.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
